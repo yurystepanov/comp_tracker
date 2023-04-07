@@ -1,0 +1,66 @@
+<div>
+    <div class="card-header">
+        {{ assembly_name }}
+    </div>
+
+    {% for item in assembly %}
+        {% with product=item.product %}
+            <div class="card-body">
+                <div class="w-75 d-inline-block">
+                    <a href="{{ product.get_absolute_url}}">{{ product.name }}</a>
+                    <select class="form-select" onchange="qty_update({{ product.id }}, this);">
+                      <option {% if item.quantity == 1 %} selected="selected" {% endif %} value=1>1 шт - {% widthratio item.price 1 1 %}₽</option>
+                      <option {% if item.quantity == 2 %} selected="selected" {% endif %} value=2>2 шт - {% widthratio item.price 1 2 %}₽</option>
+                      <option {% if item.quantity == 3 %} selected="selected" {% endif %} value=3>3 шт - {% widthratio item.price 1 3 %}₽</option>
+                      <option {% if item.quantity == 4 %} selected="selected" {% endif %} value=4>4 шт - {% widthratio item.price 1 4 %}₽</option>
+                      <option {% if item.quantity == 5 %} selected="selected" {% endif %} value=5>5 шт - {% widthratio item.price 1 5 %}₽</option>
+                    </select>
+                </div>
+                <div class="d-inline-block">
+                    <button type="button" value=0 class="btn btn-light btn-floating" onclick="qty_update({{ product.id }}, this);">
+                        <i class="bi bi-trash3"></i>
+                    </button>
+                </div>
+            </div>
+        {% endwith %}
+    {% endfor %}
+
+    <div class="card-footer">
+        Итого: {{ assembly.get_total_price|floatformat:"2g" }}₽
+    </div>
+
+    <div class="card-body">
+      <button class="btn btn-secondary" type="button">
+        Очистить
+      </button>
+    </div>
+</div>
+
+<script>
+function qty_update(product, obj){
+    var options = {
+        method: 'POST',
+        headers: {'X-CSRFToken': '{{ csrf_token }}',
+                  'Accept': 'application/json',
+                  },
+        mode: 'same-origin'
+        };
+
+    const formData = new FormData();
+    formData.append('product', product);
+    formData.append('operation', 'change_product_qty');
+    formData.append('quantity', obj.value);
+
+    options['body'] = formData
+
+    fetch("{% url 'assembly:change_product_qty' %}", options)
+        .then(response => response.json())
+        .then(json => {
+                load_assembly();
+            })
+}
+</script>
+
+
+
+

@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% load bootstrap5 %}
+
+{% block title %}{% if allow_edit %}Мои сборки{% else %} Готовые сборки {% endif %}{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-3" hidden>
+			<h3>
+				h3. Lorem ipsum dolor sit amet.
+			</h3>
+			<form role="form">
+				<div class="form-group">
+					<label for="exampleInputEmail1">
+						Email address
+					</label>
+					<input type="email" class="form-control" id="exampleInputEmail1" />
+				</div>
+				<div class="form-group">
+
+					<label for="exampleInputPassword1">
+						Password
+					</label>
+					<input type="password" class="form-control" id="exampleInputPassword1" />
+				</div>
+				<div class="form-group">
+
+					<label for="exampleInputFile">
+						File input
+					</label>
+					<input type="file" class="form-control-file" id="exampleInputFile" />
+					<p class="help-block">
+						Example block-level help text here.
+					</p>
+				</div>
+				<div class="checkbox">
+
+					<label>
+						<input type="checkbox" /> Check me out
+					</label>
+				</div>
+				<button type="submit" class="btn btn-primary">
+					Submit
+				</button>
+			</form>
+		</div>
+		<div class="col-md-9">
+			{% if allow_edit %}
+				<div class="d-flex justify-content-end">
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAssemblyModal">
+					  Новая сборка
+					</button>
+				</div>
+
+				<!-- Modal -->
+				<div class="modal fade" id="addAssemblyModal" tabindex="-1" aria-labelledby="assemblyModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+					<div class="modal-content">
+					  <div class="modal-header">
+						<h5 class="modal-title" id="assemblyModalLabel">Новая сборка</h5>
+					  </div>
+					  <form action="{% url "assembly:edit_user_assembly" %}" method="post">
+						  <div class="modal-body">
+								{% bootstrap_form assembly_add_form %}
+								{% csrf_token %}
+						  </div>
+						  <div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+								<button type="submin" class="btn btn-primary">Создать сборку</button>
+						  </div>
+					  </form>
+					</div>
+				  </div>
+				</div>
+
+			<script>
+				var myModal = document.getElementById('addAssemblyModal')
+				var myInput = document.getElementById('assembly-name')
+
+				myModal.addEventListener('shown.bs.modal', function () {
+				  myInput.focus()
+				})
+			</script>
+
+			{% endif %}
+
+			{% for assembly in assemblies %}
+				<div class="row mt-3 border rounded shadow g-3 assembly_row" data-id="{{ assembly.id }}">
+					<div class="col-md-4 text-center">
+						<h5>
+							{{ assembly.name }}
+						</h5>
+						<div class="mt-5">
+							<img alt="Нет изображения" src="{{ assembly.imageURL }}" style="height:250px; object-fit: contain;"/>
+						</div>
+					</div>
+					<div class="col-md-8">
+						<div class="list-group">
+							<a href="#" class="list-group-item list-group-item-action active" hidden>{{ assembly.name }}</a>
+								<div class="card-header"><b>{{ assembly.name }}:</b> {{ assembly.description_short }}
+									{% if allow_edit %}
+									<button type="button" data-id="{{ assembly.id }}" data-action="assembly_delete" class="btn btn-light btn-floating pull-right assembly_delete" title="Удалить">
+										<i class="bi bi-trash3"></i>
+									</button>
+									<button type="button" data-id="{{ assembly.id }}" data-action="assembly_current" class="btn btn-light btn-floating pull-right assembly_current" title="Сделать текущей" {% if assembly.id == current_assembly_id %}hidden{% endif %}>
+										<i class="bi bi-pin-angle"></i>
+									</button>
+									{% endif %}
+								</div>
+
+
+							{% for product in assembly.component.all %}
+							<div class="list-group-item">
+								<a class="list-group-item-text link-dark" href="{{ product.get_absolute_url}}">
+									{{ product.name }}
+								</a>
+								<span class="pull-right">{{ product.price|floatformat:"2g" }} ₽</span>
+							</div>
+							{% endfor %}
+							<div class="list-group-item justify-content-between" hidden>
+								Стоимость: {{ assembly.total_value }} <span class="badge badge-secondary badge-pill">12</span>
+							</div>
+							<div class="card-footer">
+								<span class="pull-right fw-bold"> Стоимость: {{ assembly.total_value|floatformat:"2g" }} ₽ </span>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+
+	</div>
+</div>
+{% endblock %}
+
+{% block domready %}
+	var delete_buttons = document.querySelectorAll('button.assembly_delete')
+
+	delete_buttons.forEach(element => {element.addEventListener('click', function(e){
+		e.preventDefault();
+
+		var result = confirm("Удалить сборку?");
+
+		if (result){
+			var deleteButton = this;
+			var options = {
+				method: 'DELETE',
+				headers: {'X-CSRFToken': '{{ csrf_token }}' },
+				mode: 'same-origin'
+				}
+			url = '{% url "assembly-detail" 31415  %}'.replace("31415", deleteButton.dataset.id);
+
+			// send HTTP request
+			fetch(url, options)
+			.then(res => {
+			  if(!res.ok) {
+				return res.text().then(text => { throw new Error(text) })
+			   }
+			  else {
+			   <!--return res.json();-->
+				const assembly_row = document.querySelector("div.assembly_row[data-id='"+deleteButton.dataset.id+"']");
+				assembly_row.remove();
+			 }
+			})
+			.catch(err => {
+			   console.log('caught it!',err);
+			});
+		}
+	})});
+
+	var current_buttons = document.querySelectorAll('button.assembly_current')
+
+	current_buttons.forEach(element => {element.addEventListener('click', function(e){
+		e.preventDefault();
+
+		var result = confirm("Сделать сборку текущей?");
+
+		if (result){
+			var currentButton = this;
+			var options = {
+				method: 'POST',
+				headers: {'X-CSRFToken': '{{ csrf_token }}' },
+				mode: 'same-origin'
+				}
+			url = '{% url "assembly:current_assembly" %}';
+
+			// add request body
+			var formData = new FormData();
+			formData.append('id', currentButton.dataset.id);
+			options['body'] = formData;
+
+			// send HTTP request
+			fetch(url, options)
+			.then(res => {
+			  if(!res.ok) {
+				return res.text().then(text => { throw new Error(text) })
+			   }
+			  else {
+			   <!--return res.json();-->
+				const buttons = document.querySelectorAll("button.assembly_current");
+				buttons.forEach(button => {
+						  button.hidden = (button.dataset.id === currentButton.dataset.id)
+					})
+			 }
+			})
+			.catch(err => {
+			   console.log('caught it!',err);
+			});
+		}
+	})});
+
+
+
+{% endblock %}
+

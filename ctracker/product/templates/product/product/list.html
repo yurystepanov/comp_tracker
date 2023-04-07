@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% load bootstrap5 %}
+{% load humanize %}
+
+{% block title %}{% if group.name %}{{ group.name }}{% else %}Все категории{% endif %}{% endblock %}
+
+{% block content %}
+
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+        Текущая сборка
+        </button>
+    </div>
+
+
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'product:product_group_list' %}">Каталог</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'product:products' %}">Все категории</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ group.name }}</li>
+      </ol>
+    </nav>
+
+
+    <div class="row mb-3 text-center">
+        <div class="col-3 text-start">
+          <p class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+            <span class="fs-5 fw-semibold">Фильтры</span>
+          </p>
+          <form id="filterform" method="get">
+              {% bootstrap_form form %}
+              <p><input type="submit" value="Применить"></p>
+          </form>
+      </div>
+
+      <div class="col-9 themed-grid-col">
+
+
+        <div class="input-group mb-3">
+          <input form="filterform" type="text" class="form-control" placeholder="Intel 12400F" aria-label="Поиск" aria-describedby="button-addon2" name="search" id="search" value="{{ search_value }}">
+          <button form="filterform"  class="btn btn-outline-secondary" type="submit" id="button-addon2">Поиск</button>
+        </div>
+
+        <div class="row">
+
+            <div class="col-5">
+                {% include "pagination.html" with page=page_obj page_range=page_range %}
+            </div>
+
+            <div class="col-3">
+                <div class="DPafJ" hidden><div class="_138Fk">Сначала дорогие</div><svg class="_15S72" version="1.1" viewBox="0 0 11.9 6.5" fill="none" stroke="#14295e"><polyline points="0.7,0.7 5.9,5.7 11.1,0.7 "></polyline></svg><div class="_1YrkZ _1phw8"><ul><li class="_3EEbk" data-qa="Select-option-smart_ranking">По умолчанию</li><li class="_3EEbk" data-qa="Select-option-price_rub">Сначала дешёвые</li><li class="_3EEbk _3eew0" data-qa="Select-option--price_rub">Сначала дорогие</li><li class="_3EEbk" data-qa="Select-option--popularity">По популярности</li><li class="_3EEbk" data-qa="Select-option--newness">По новизне</li></ul></div></div>
+
+
+                <div class="btn-group" hidden>
+                  <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Сортировка:
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item active" href="#">Сначала популярные</a></li>
+                    <li><a class="dropdown-item" href="#">Сначала недорогие</a></li>
+                    <li><a class="dropdown-item" href="#">Сначала дорогие</a></li>
+                  </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 g-2 gap-3">
+            {% for product in products %}
+                <div class="col">
+                    <div class="card h-100 shadow">
+                        <div class="card-header">
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3 text-start">
+                                <div class="col-3">
+                                    <img src="{{ product.imageURL}}" class="card-img-top" alt="{{ product.name }}" style="height:150px; object-fit: contain;">
+                                </div>
+                                <div class="card-body col-7">
+                                    <div class="position-relative">
+                                        <a href="{{ product.get_absolute_url}}" class="stretched-link"></a>
+                                        <h6 class="card-title">{{ product.name }}</h6>
+                                        <p class="card-text">{{ product.spec_short}}</p>
+                                    </div>
+                                    <p></p>
+                                    <div class="form-row">
+                                        <div class="form-check form-switch form-check-inline" title="Добавить в текущую сборку">
+                                          <input class="form-check-input state_switch" type="checkbox" data-id="{{ product.id }}" data-operation="assembly_submit" id="sw1-{{ product.id }}" {% if product.id in in_assembly_list %} checked {% endif %}>
+                                          <label class="form-check-label" for="sw1-{{ product.id }}">В сборку</label>
+                                        </div>
+                                        <div class="form-check form-switch form-check-inline" title="Добавить в избранное">
+                                          <input class="form-check-input state_switch" type="checkbox" data-id="{{ product.id }}" data-operation="favourites_submit" id="sw2-{{ product.id }}" {% if not user.is_authenticated %} disabled {% endif %} {% if product.id in in_favourites_list %} checked {% endif %}>
+                                          <label class="form-check-label" for="sw2-{{ product.id }}">Избранное</label>
+                                        </div>
+                                        <div class="form-check form-switch form-check-inline" title="Добавить в рассылку цен">
+                                          <input class="form-check-input state_switch" type="checkbox" data-id="{{ product.id }}" data-operation="subscription_submit" id="sw3-{{ product.id }}" {% if not user.is_authenticated %} disabled {% endif %} {% if product.id in in_subscriptions_list %} checked {% endif %}>
+                                          <label class="form-check-label" for="sw3-{{ product.id }}" >Рассылка</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body col-2 text-end">
+                                    {% if product.prev_price %}
+                                        <s>{{ product.prev_price|floatformat:"2g" }} ₽</s>
+
+                                        {% if product.price < product.prev_price %}
+                                            <i class="bi bi-arrow-down-circle-fill text-success"></i>
+                                        {% else %}
+                                            <i class="bi bi-arrow-up-circle-fill text-danger"></i>
+                                        {% endif %}
+
+                                    {% endif %}
+                                    <h6>от {{ product.price|floatformat:"2g" }} ₽</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                          <small class="text-muted">Обновлено {{ product.updated_at|naturaltime }}</small>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+            <div>Комплектующие не найдены</div>
+            {% endfor %}
+        </div>
+        {% include "pagination.html" with page=page_obj page_range=page_range %}
+      </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Текущая сборка</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body" id="assembly">
+      </div>
+    </div>
+
+<script>
+    function load_assembly(){
+        blockRequest = true;
+        fetch("{% url 'assembly:user_assembly' %}")
+        .then(response => response.text())
+        .then(html => {
+            if (html === '') {
+                emptyPage = true;
+            }
+            else {
+                var assembly = document.getElementById('assembly');
+                assembly.innerHTML = html;
+                nodeScriptReplace(assembly);
+                blockRequest = false;
+            }
+        })
+    }
+
+    function nodeScriptReplace(node) {
+            if ( nodeScriptIs(node) === true ) {
+                    node.parentNode.replaceChild( nodeScriptClone(node) , node );
+            }
+            else {
+                    var i = -1, children = node.childNodes;
+                    while ( ++i < children.length ) {
+                          nodeScriptReplace( children[i] );
+                    }
+            }
+
+            return node;
+    }
+
+    function nodeScriptClone(node){
+            var script  = document.createElement("script");
+            script.text = node.innerHTML;
+
+            var i = -1, attrs = node.attributes, attr;
+            while ( ++i < attrs.length ) {
+                  script.setAttribute( (attr = attrs[i]).name, attr.value );
+            }
+            return script;
+    }
+
+    function nodeScriptIs(node) {
+            return node.tagName === 'SCRIPT';
+    }
+</script>
+
+{% endblock %}
+
+{% block domready %}
+    load_assembly();
+
+    var state_switches = document.querySelectorAll('.state_switch')
+
+    state_switches.forEach(element => {element.addEventListener('click', function(e){
+			var options = {
+				method: 'POST',
+				headers: {'X-CSRFToken': '{{ csrf_token }}',
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json'
+                          },
+				mode: 'same-origin',
+                body: JSON.stringify({
+                                       'product_id': element.dataset.id,
+                                       'operation':  element.dataset.operation,
+                                       'state':      element.checked
+                                       })
+				}
+
+			url = '{% url 'state_operation' %}';
+            fetch(url, options)
+                .then(response => response.json())
+                .then(json => {
+                    element.checked = json.state
+
+                    if (element.dataset.operation == 'assembly_submit'){
+                        load_assembly();
+                    }
+                });
+        })
+    })
+
+{% endblock %}

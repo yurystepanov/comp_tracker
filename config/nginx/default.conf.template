@@ -1,0 +1,31 @@
+# upstream for uWSGI
+upstream uwsgi_app {
+    server unix:/code/ctracker/uwsgi_app.sock;
+}
+
+server {
+    listen                  80;
+    server_name             www.ctracker.ru ctracker.ru;
+    return 301              https://$host$request_uri;
+}
+
+server {
+    listen                  443 ssl;
+    ssl_certificate         /code/ctracker/ssl/ctracker.crt;
+    ssl_certificate_key     /code/ctracker/ssl/ctracker.key;
+    server_name             www.ctracker.ru ctracker.ru;
+    error_log               stderr warn;
+    access_log              /dev/stdout main;
+    location / {
+        include             /etc/nginx/uwsgi_params;
+        uwsgi_pass          uwsgi_app;
+    }
+
+    location /static/ {
+        alias /code/ctracker/static/;
+    }
+
+    location /media/ {
+        alias /code/media/static/;
+    }
+}

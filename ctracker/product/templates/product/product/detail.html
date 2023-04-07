@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }}{% endblock %}
+{% load humanize %}
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'product:product_group_list' %}">Все категории</a></li>
+        <li class="breadcrumb-item"><a href="{{ product.group.get_absolute_url }}">{{ product.group.name }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+      </ol>
+    </nav>
+
+    <div class="card shadow">
+      <div class="card-header">
+      </div>
+      <div class="row">
+        <div class="col-3">
+            <div class="container py-3">
+                <img src="{{ product.imageURL }}" alt="{{ product.name }}" style="height:300px; width:300px; object-fit: contain;">
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card-body text-left">
+                <p class="card-title">{{ product.name }}</p>
+                <p></p>
+                <p class="card-text">{{ product.brand}}</p>
+                <p class="card-text">{{ product.spec_short}}</p>
+            </div>
+        </div>
+        <div class="col-3 card-body text-left">
+            <p>Цены</p>
+          {% for price in prices %}
+            <div class="row">
+                <div class="col text-left"><a href="{{ price.external.url}}" target="_blank">{{price.vendor}}</a></div>
+                <div class="col text-right"><b>{{price.price|floatformat:"2g"}} ₽</b></div>
+
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="card-body text-left">
+            <h5>Характеристики</h5>
+            {% for key, values in specs.items %}
+                <p class="card-header">{{ key }}</p>
+                {% for spec, value in values %}
+                    <div class="row">
+                        <div class="col text-left">{{ spec }}</div>
+                        <div class="col text-right">{{ value }}</div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+        </div>
+        <div class="card-body text-left">
+            <p class="card-title">Описание</p>
+            <p class="card-text">{{ product.description}}</p>
+        </div>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">Last updated {{ product.updated_at|naturaltime }}</small>
+      </div>
+    </div>
+
+{% endblock %}

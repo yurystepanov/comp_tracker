@@ -1,0 +1,7 @@
+{% load bootstrap5 %}
+
+<form action="{% url "assembly:edit_user_assembly" %}" method="post">
+    {% bootstrap_form form %}
+    {% csrf_token %}
+    <p><input type="submit" value="Add assembly"></p>
+</form>
