@@ -70,7 +70,8 @@ class VendorPrice(models.Model):
         db_table = 'vendor_price'
 
     def __str__(self):
-        return f'Product: {self.product} Vendor: {self.vendor} Price {self.price} Date: {self.date} Current: {self.is_current}'
+        return (f'Product: {self.product} Vendor: {self.vendor} Price '
+                f'{self.price} Date: {self.date} Current: {self.is_current}')
 
     def save(self, *args, **kwargs):
         with transaction.atomic():
