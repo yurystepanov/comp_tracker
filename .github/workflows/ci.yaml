@@ -57,6 +57,26 @@ jobs:
         working-directory: ctracker
         run: python manage.py test
 
+  package-job: # package job for building and publishing docker images
+    runs-on: ubuntu-latest
+    needs: [health-check-job] # will be fired if and only if health-check-job is passed.
+    if: ${{ github.event_name == 'push' }} # will be fired if the trigger event is a push event.
+    steps:
+      - name: Checkout code # checking our the code at current commit that triggers the workflow
+        uses: actions/checkout@v2 # Runs a single command using the runners shell
+      - name: Yandex Cloud CR "Login" Action for GitHub Actions
+        uses: yc-actions/yc-cr-login@v0.1-alpha
+        with:
+            yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+      - name: Build, tag, and push image to Yandex Cloud Container Registry
+        env:
+            CR_REGISTRY: crps1qcig864jjaaej54
+            CR_REPO: comp-tracker
+            IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG .
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG
+
 #  package-job: # package job for building and publishing docker images
 #    runs-on: ubuntu-latest
 #    needs: [health-check-job] # will be fired if and only if health-check-job is passed.
