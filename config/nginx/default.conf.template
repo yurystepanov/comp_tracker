@@ -1,6 +1,6 @@
 # upstream for uWSGI
 upstream uwsgi_app {
-    server unix:/code/ctracker/uwsgi_app.sock;
+    server 127.0.0.1:3031
 }
 
 server {
