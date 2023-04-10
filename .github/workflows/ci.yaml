@@ -81,6 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [package-job] # will be fired if and only if package-job-job is passed.
     if: ${{ github.event_name == 'push' }} # will be fire if the trigger event is a push event.
+    steps:
       - name: Checkout code # checking our the code at current commit that triggers the workflow
         uses: actions/checkout@v2 # Runs a single command using the runners shell
       - name: Deploy COI VM
@@ -106,8 +107,8 @@ jobs:
           vm-core-fraction: 100
           vm-zone-id: ru-central1-b
           vm-subnet-id: e2l0rlubgosi1hbl7cdi
-          user-data-path: './user-data.yml'
-          docker-compose-path: './docker-compose.yml'
+          user-data-path: './user-data.yaml'
+          docker-compose-path: './docker-compose.yaml'
 
 #  package-job: # package job for building and publishing docker images
 #    runs-on: ubuntu-latest
