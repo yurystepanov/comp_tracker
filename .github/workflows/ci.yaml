@@ -81,6 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [package-job] # will be fired if and only if package-job-job is passed.
     if: ${{ github.event_name == 'push' }} # will be fire if the trigger event is a push event.
+    steps:
       - name: Checkout code # checking our the code at current commit that triggers the workflow
         uses: actions/checkout@v2 # Runs a single command using the runners shell
       - name: Deploy COI VM
