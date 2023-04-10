@@ -1,4 +1,3 @@
-/ctracker/ctracker/settings/prod.py
 /ctracker/uwsgi_app.sock
 /ctracker/uwsgi_app.sock 
 /ctracker/log.txt
