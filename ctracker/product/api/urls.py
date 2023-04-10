@@ -50,5 +50,5 @@ urlpatterns = [
     path('', include(product_router_group.urls)),
     path('', include(product_router_brand.urls)),
     path('', include(product_router_specifications.urls)),
-    path('state_operation', views.StateOperationView.as_view(),name='state_operation')
+    path('state_operation', views.StateOperationView.as_view(), name='state_operation')
 ]

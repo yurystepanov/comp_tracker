@@ -58,7 +58,7 @@ class ProductFilterFormTests(TestCase):
 
     def test_filter_fields_good(self):
         with patch('product.forms.make_product_group_spec_queryset') as filters:
-            filters_return = [{'value':f'2{i}0v'} for i in range(5)]
+            filters_return = [{'value': f'2{i}0v'} for i in range(5)]
 
             filters.return_value = [[['vlt', 'voltage'], filters_return]]
 
