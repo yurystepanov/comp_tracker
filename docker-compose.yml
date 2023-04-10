@@ -6,9 +6,9 @@ services:
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB={{ env.POSTGRES_DB }}
+      - POSTGRES_USER={{ env.POSTGRES_USER }}
+      - POSTGRES_PASSWORD={{ env.POSTGRES_PASSWORD }}
 
   web:
     build: .
@@ -25,9 +25,10 @@ services:
     #      - "8000:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=ctracker.settings.prod
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB={{ env.POSTGRES_DB }}
+      - POSTGRES_USER={{ env.POSTGRES_USER }}
+      - POSTGRES_PASSWORD={{ env.POSTGRES_PASSWORD }}
+      - DJANGO_SECRET_KEY= {{ env.DJANGO_SECRET_KEY }}
     depends_on:
       - db
 
@@ -40,3 +41,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      - NGINX_CERT: {{ env.NGINX_CERT }}
+      - NGINX_CERT_KEY: {{ env.NGINX_CERT_KEY }}
