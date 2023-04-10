@@ -51,8 +51,10 @@ jobs:
       - name: Check Syntax # check code formatting
         run: pycodestyle --statistics --max-line-length=120 --exclude=migrations .
       - name: Run Migrations # run migrations to create table in side car db container
+        working-directory: ctracker
         run: python manage.py migrate
       - name: Run Test # running tests
+        working-directory: ctracker
         run: python manage.py test
 
 #  package-job: # package job for building and publishing docker images

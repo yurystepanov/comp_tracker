@@ -16,7 +16,7 @@ class ProductFilterFormTests(TestCase):
 
     def test_field_price_from_bad(self):
         form = ProductFilterForm(group=self.group, data={'price_from': '1d000'})
-        self.assertEqual(form.errors['price_from'], ['Enter a whole number.'])
+        self.assertEqual(form.errors['price_from'], ['Введите целое число.'])
 
     def test_field_price_to_good(self):
         form = ProductFilterForm(group=self.group, data={'price_to': '1000'})
@@ -24,7 +24,7 @@ class ProductFilterFormTests(TestCase):
 
     def test_field_price_to_bad(self):
         form = ProductFilterForm(group=self.group, data={'price_to': '1d000'})
-        self.assertEqual(form.errors['price_to'], ['Enter a whole number.'])
+        self.assertEqual(form.errors['price_to'], ['Введите целое число.'])
 
     def test_field_brand_exists(self):
         form = ProductFilterForm(group=self.group, data={'brand': 'Intel'})
@@ -75,4 +75,4 @@ class ProductFilterFormTests(TestCase):
             form = ProductFilterForm(group=self.group, data={'vlt': ['220v', '2400v']})
             filters.assert_called_once()
             self.assertEqual(form.is_valid(), False)
-            self.assertEqual(form.errors['vlt'], ['Select a valid choice. 2400v is not one of the available choices.'])
+            self.assertEqual(form.errors['vlt'], ['Выберите корректный вариант. 2400v нет среди допустимых значений.'])

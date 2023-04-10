@@ -78,7 +78,7 @@ def generate_data():
 
         price = VendorPrice.objects.create(vendor=vendor,
                                            product=product,
-                                           price=product_id * 200,
+                                           price=(product_id + 1) * 200,
                                            date=date.today(),
                                            )
 
