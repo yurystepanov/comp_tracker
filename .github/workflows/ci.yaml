@@ -94,8 +94,6 @@ jobs:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          NGINX_CERT: ${{ secrets.NGINX_CERT }}
-          NGINX_CERT_KEY: ${{ secrets.NGINX_CERT_KEY }}
           YC_VM_USERNAME: ${{ secrets.YC_VM_USERNAME }}
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
@@ -103,8 +101,8 @@ jobs:
           vm-name: vm-comp-tracker
           vm-service-account-id: aje6v81608hnkf86p3o0
           vm-cores: 2
-          vm-memory: 2 GB
-          vm-core-fraction: 100
+          vm-memory: 1 GB
+          vm-core-fraction: 20
           vm-zone-id: ru-central1-b
           vm-subnet-id: e2l0rlubgosi1hbl7cdi
           user-data-path: './user-data.yaml'

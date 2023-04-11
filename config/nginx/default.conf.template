@@ -1,6 +1,6 @@
 # upstream for uWSGI
 upstream uwsgi_app {
-    server 127.0.0.1:3031
+    server web:3031;
 }
 
 server {
@@ -11,11 +11,12 @@ server {
 
 server {
     listen                  443 ssl;
-    #ssl_certificate         /code/ctracker/ssl/ctracker.crt;
-    #ssl_certificate_key     /code/ctracker/ssl/ctracker.key;
+    ssl_certificate         /code/ctracker/ssl/ctracker.crt;
+    ssl_certificate_key     /code/ctracker/ssl/ctracker.key;
     server_name             www.ctracker.ru ctracker.ru;
     error_log               stderr warn;
     access_log              /dev/stdout main;
+
     location / {
         include             /etc/nginx/uwsgi_params;
         uwsgi_pass          uwsgi_app;
@@ -29,3 +30,4 @@ server {
         alias /code/media/static/;
     }
 }
+
