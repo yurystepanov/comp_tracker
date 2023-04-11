@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /code/ctracker || exit
+cd ctracker || exit
 
 # Collect static files
 echo "Collect static files"
