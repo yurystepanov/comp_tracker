@@ -13,6 +13,7 @@ services:
   web:
     image: {{ env.IMAGE_URL }}
     command: [ "./wait-for-it.sh", "db:5432", "--",
+               "./pre-launch-operations.sh", "--", "--",
                "uwsgi", "--ini", "/code/config/uwsgi/uwsgi.ini" ]
     restart: always
     volumes:
