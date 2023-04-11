@@ -13,11 +13,12 @@ services:
   web:
     image: {{ env.IMAGE_URL }}
     command: [ "./wait-for-it.sh", "db:5432", "--",
-               "pre-launch-operations.sh"]
+               "uwsgi", "--ini", "/code/config/uwsgi/uwsgi.ini"]
     restart: always
     volumes:
       - nginx_config:/code/config/nginx
-      - application:/code
+      - static:/code/ctracker/static
+      - media:/code/ctracker/media
     environment:
       - DJANGO_SETTINGS_MODULE=ctracker.settings.prod
       - POSTGRES_DB={{ env.POSTGRES_DB }}
@@ -32,7 +33,9 @@ services:
     restart: always
     volumes:
       - nginx_config:/etc/nginx/templates
-      - application:/code
+      - static:/static
+      - media:/media
+      - ssl:/ssl
     ports:
       - "80:80"
       - "443:443"
@@ -40,4 +43,6 @@ services:
 volumes:
   postgres_db:
   nginx_config:
-  application:
+  static:
+  media:
+  ssl:
