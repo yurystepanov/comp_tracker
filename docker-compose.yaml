@@ -11,15 +11,13 @@ services:
       - POSTGRES_PASSWORD={{ env.POSTGRES_PASSWORD }}
 
   web:
-    image: { { env.IMAGE_URL } }
+    image: {{ env.IMAGE_URL }}
     command: [ "./wait-for-it.sh", "db:5432", "--",
                "uwsgi", "--ini", "/code/config/uwsgi/uwsgi.ini" ]
     restart: always
     volumes:
       - nginx_config:/code/config/nginx
       - application:/code
-    ports:
-      - "3031:3031"
     environment:
       - DJANGO_SETTINGS_MODULE=ctracker.settings.prod
       - POSTGRES_DB={{ env.POSTGRES_DB }}
@@ -38,10 +36,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "3031:3031"
-    environment:
-      - NGINX_CERT: { { env.NGINX_CERT } }
-      - NGINX_CERT_KEY: { { env.NGINX_CERT_KEY } }
 
 volumes:
   postgres_db:
