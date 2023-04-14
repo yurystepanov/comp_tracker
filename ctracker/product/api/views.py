@@ -37,25 +37,9 @@ class ProductFilter(filters.FilterSet):
         return qs
 
 
-# class ProductListView(generics.ListAPIView):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
-#
-#
-# class ProductDetailView(generics.RetrieveAPIView):
-#     queryset = Product.objects.all()
-#     serializer_class = ProductSerializer
-
-
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     queryset = queryset.select_related('brand', 'group')
-
-    # queryset = queryset.select_related('group')
-
-    # specifications_qs = SpecificationValue.objects.select_related('specification', 'specification__group')
-    #
-    # queryset = queryset.prefetch_related(Prefetch('specifications', queryset=specifications_qs))
 
     serializer_class = ProductSerializer
     filterset_class = ProductFilter
@@ -126,7 +110,7 @@ class SpecificationValueViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, 
 
 class StateOperationPermission(BasePermission):
     def has_permission(self, request, view):
-        if request.data.get('operation', None) == StateOperations.ASSEMBLY:
+        if request.data.get('operation', None) == StateOperations.ASSEMBLY.value:
             return True
         else:
             return bool(request.user and request.user.is_authenticated)
