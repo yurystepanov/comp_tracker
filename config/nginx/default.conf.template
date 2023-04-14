@@ -1,27 +1,30 @@
 # upstream for uWSGI
-upstream uwsgi_app {
+upstream uwsgi_app{
     server web:3031;
 }
 
 server {
-    listen                  80;
-    server_name             www.ctracker.ru ctracker.ru;
+    listen                  80 default_server;
+    server_name             ystep.ru *.ystep.ru;
     return 301              https://$host$request_uri;
 }
 
 server {
     listen                  443 ssl;
-    ssl_certificate         /ssl/ctracker.crt;
-    ssl_certificate_key     /ssl/ctracker.key;
-    server_name             www.ctracker.ru ctracker.ru;
+    ssl_certificate         /etc/letsencrypt/live/ystep.ru/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/ystep.ru/privkey.pem;
+    server_name             ctracker.ystep.ru;
     error_log               stderr warn;
     access_log              /dev/stdout main;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     location / {
         include             /etc/nginx/uwsgi_params;
         uwsgi_pass          uwsgi_app;
-    }
-
+    }   
+ 
     location /static/ {
         alias /static/;
     }
@@ -29,5 +32,24 @@ server {
     location /media/ {
         alias /media/;
     }
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
 }
 
+server {
+    listen                  443 ssl;
+    ssl_certificate         /etc/letsencrypt/live/ystep.ru/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/ystep.ru/privkey.pem;
+    server_name             ystep.ru www.ystep.ru;
+    error_log               stderr warn;
+    access_log              /dev/stdout main;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        alias /ystep/;
+    }	
+}

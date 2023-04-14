@@ -13,12 +13,12 @@ services:
   web:
     image: {{ env.IMAGE_URL }}
     command: [ "./wait-for-it.sh", "db:5432", "--",
-               "uwsgi", "--ini", "/code/config/uwsgi/uwsgi.ini"]
+               "/bin/sh", "/code/pre-launch-operations.sh"]
     restart: always
     volumes:
-      - nginx_config:/code/config/nginx
-      - static:/code/ctracker/static
-      - media:/code/ctracker/media
+      - nginx:/code/data/nginx
+      - ctracker_static:/code/ctracker/static
+      - ctracker_media:/code/ctracker/media
     environment:
       - DJANGO_SETTINGS_MODULE=ctracker.settings.prod
       - POSTGRES_DB={{ env.POSTGRES_DB }}
@@ -32,17 +32,27 @@ services:
     image: nginx:1.23.4
     restart: always
     volumes:
-      - nginx_config:/etc/nginx/templates
-      - static:/static
-      - media:/media
-      - ssl:/ssl
+      - nginx:/etc/nginx/templates
+      - ctracker_static:/static
+      - ctracker_media:/media
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+      - ystep_root:/ystep
     ports:
       - "80:80"
       - "443:443"
 
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+
 volumes:
+  nginx:
   postgres_db:
-  nginx_config:
-  static:
-  media:
-  ssl:
+  ctracker_static:
+  ctracker_media:
+  certbot_conf:
+  certbot_www:
+

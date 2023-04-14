@@ -166,3 +166,7 @@ REST_FRAMEWORK = {
 }
 
 ASSEMBLY_SESSION_ID = 'assembly'
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0

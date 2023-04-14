@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cp -r ./config/nginx ./data/
+
 cd ctracker || exit
 
 # Collect static files

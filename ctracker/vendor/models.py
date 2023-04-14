@@ -73,14 +73,14 @@ class VendorPrice(models.Model):
         return (f'Product: {self.product} Vendor: {self.vendor} Price '
                 f'{self.price} Date: {self.date} Current: {self.is_current}')
 
-    def save(self, *args, **kwargs):
+    def save(self, force_is_current=False, *args, **kwargs):
         with transaction.atomic():
 
-            if not kwargs.get('force_is_current', False):
+            if force_is_current:
                 current_price = get_current_price(product=self.product, vendor=self.vendor)
                 if current_price and current_price.date < self.date:
                     current_price.is_current = False
-                    current_price.save(force_is_current=True, *args, **kwargs)
+                    current_price.save(force_is_current=True)
 
                 if not current_price:
                     self.is_current = True

@@ -1,9 +1,8 @@
 from .base import *
 import os
 
-DEBUG = False
+DEBUG = True
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # Security
 CSRF_COOKIE_SECURE = True
@@ -14,7 +13,7 @@ ADMINS = [
     ('Yury Stepanov', 'yury.a.stepanov@gmail.com'),
 ]
 
-ALLOWED_HOSTS = ['ctracker.ystep.ru', 'www.ctracker.ystep.ru']
+ALLOWED_HOSTS = ['ctrackerdev.ru', 'www.ctrackerdev.ru']
 
 DATABASES = {
     'default': {
