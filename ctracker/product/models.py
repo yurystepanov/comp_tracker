@@ -1,10 +1,12 @@
 from itertools import groupby
 
+from django.core.cache import cache
 from django.db import models
 from django.db.models import Exists, OuterRef, Min, Max, Q
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from pytils.translit import slugify
+
 
 
 class Brand(models.Model):
@@ -130,29 +132,42 @@ class Product(models.Model):
         """
         Returns current minimum price for Product. If no price exists - returns None
         """
-        price_object = self.current_price_object()
-        return price_object.price if price_object else None
+        key = (self.id, 'curr_price')
+        price = cache.get(key)
+
+        if not price:
+            price_object = self.current_price_object()
+            price = price_object.price if price_object else None
+            cache.set(key, price)
+
+        return price
 
     def prev_price(self):
         """
         Returns closest vendors price that differs from the current price
         """
+        key = (self.id, 'prev_price')
+        prev_price = cache.get(key)
 
-        price_object = self.current_price_object()
-        if price_object:
-            current_price_date = price_object.date
+        if not prev_price:
+            price_object = self.current_price_object()
+            if price_object:
+                current_price_date = price_object.date
 
-            qs = self.prices.filter(~Q(price=price_object.price), date__lt=current_price_date).annotate(
-                last_price=Exists(
-                    self.prices.filter(product=OuterRef('product'),
-                                       vendor=OuterRef('vendor'),
-                                       date__gt=OuterRef('date'),
-                                       date__lt=current_price_date),
-                    ~Q(price=price_object.price)
-                ))
+                qs = self.prices.filter(~Q(price=price_object.price), date__lt=current_price_date).annotate(
+                    last_price=Exists(
+                        self.prices.filter(product=OuterRef('product'),
+                                           vendor=OuterRef('vendor'),
+                                           date__gt=OuterRef('date'),
+                                           date__lt=current_price_date),
+                        ~Q(price=price_object.price)
+                    ))
 
-            last_prices = qs.filter(last_price=False, price__gt=0).aggregate(Min('price'))
-            return last_prices.get('price__min')
+                last_prices = qs.filter(last_price=False, price__gt=0).aggregate(Min('price'))
+
+                prev_price = last_prices.get('price__min')
+                cache.set(key, prev_price)
+        return prev_price
 
 
 class SpecificationGroup(models.Model):

@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}{{ product.name }}{% endblock %}
 {% load humanize %}
+{% load cache %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
 
 {% block content %}
+    {% cache 300 product_detail product %}
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'product:product_group_list' %}">Все категории</a></li>
@@ -63,5 +67,7 @@
         <small class="text-muted">Last updated {{ product.updated_at|naturaltime }}</small>
       </div>
     </div>
+
+    {% endcache %}
 
 {% endblock %}
