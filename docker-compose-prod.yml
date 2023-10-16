@@ -10,10 +10,12 @@ services:
       - POSTGRES_USER={{ env.POSTGRES_USER }}
       - POSTGRES_PASSWORD={{ env.POSTGRES_PASSWORD }}
 
+  redis:
+    image: redis:7-alpine
+
   web:
     image: {{ env.IMAGE_URL }}
-    command: [ "./wait-for-it.sh", "db:5432", "--",
-               "/bin/sh", "/code/pre-launch-operations.sh"]
+    command: /start
     restart: always
     volumes:
       - nginx:/code/data/nginx
@@ -25,6 +27,7 @@ services:
       - POSTGRES_USER={{ env.POSTGRES_USER }}
       - POSTGRES_PASSWORD={{ env.POSTGRES_PASSWORD }}
       - DJANGO_SECRET_KEY= {{ env.DJANGO_SECRET_KEY }}
+      - TG_BOT_API_KEY = {{ env.TG_BOT_API_KEY }}
     depends_on:
       - db
 
@@ -42,11 +45,6 @@ services:
       - "80:80"
       - "443:443"
 
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - certbot_conf:/etc/letsencrypt
-      - certbot_www:/var/www/certbot
 
 volumes:
   nginx:

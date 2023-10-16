@@ -45,11 +45,13 @@ INSTALLED_APPS = [
     'vendor.apps.VendorConfig',
     'account.apps.AccountConfig',
     'assembly.apps.AssemblyConfig',
+    'bot.apps.BotConfig',
     # 3rd party
     'bootstrap5',
     'rest_framework',
     'debug_toolbar',
-    'django_filters'
+    'django_filters',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
@@ -167,6 +169,15 @@ REST_FRAMEWORK = {
 
 ASSEMBLY_SESSION_ID = 'assembly'
 
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-REDIS_DB = 0
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://redis:6379",
+    }
+}
+
+CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+TELEGRAM_BOT_API_KEY = '6117329872:AAFeu286dRjJq8AeKwdCwgY1Xe9ScE3Spq401'

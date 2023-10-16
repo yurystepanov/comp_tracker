@@ -74,7 +74,7 @@ jobs:
             CR_REPO: comp-tracker
             IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG .
+          docker build -f ./compose/production/django/Dockerfile -t cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG
 
   deploy-job: # deploy job is for deploying code to yandex cloud
@@ -95,6 +95,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           YC_VM_USERNAME: ${{ secrets.YC_VM_USERNAME }}
+          TG_BOT_API_KEY:  ${{ secrets.TG_BOT_API_KEY }}
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           folder-id: b1gpla67gvi8287ckpmi
@@ -106,4 +107,4 @@ jobs:
           vm-zone-id: ru-central1-b
           vm-subnet-id: e2l0rlubgosi1hbl7cdi
           user-data-path: './user-data.yaml'
-          docker-compose-path: './docker-compose.yaml'
+          docker-compose-path: './docker-compose-prod.yml'

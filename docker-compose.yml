@@ -1,0 +1,114 @@
+services:
+
+  db:
+    image: postgres:15.2
+    restart: always
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  redis:
+    image: redis:7-alpine
+
+  web:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: ctracker_app
+    # '/start' is the shell script used to run the service
+    command: /start
+    restart: always
+    volumes:
+      - .:/code
+      - static:/code/ctracker/static
+      - media:/code/ctracker/media
+      - nginx_conf:/active/config/nginx/conf
+      - nginx_ssl:/active/config/nginx/ssl
+    # env_file is used to manage the env variables of our project
+    env_file:
+      - ./compose/local/django/.env
+    depends_on:
+      - redis
+      - db
+
+  nginx:
+    image: nginx:1.23.4
+    restart: always
+    volumes:
+      - nginx_conf:/etc/nginx/templates
+      - nginx_ssl:/ssl
+      - static:/static
+      - media:/media
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: ctracker_celery_worker
+    command: /start-celeryworker
+    volumes:
+      - .:/code
+    env_file:
+      - ./compose/local/django/.env
+    depends_on:
+      - redis
+      - db
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: ctracker_celery_beat
+    command: /start-celerybeat
+    volumes:
+      - .:/code
+    env_file:
+      - ./compose/local/django/.env
+    depends_on:
+      - redis
+      - db
+
+  telegram_bot:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: ctracker_telegram_bot
+    command: /start-telegrambot
+    volumes:
+      - .:/code
+    env_file:
+      - ./compose/local/django/.env
+    depends_on:
+      - redis
+      - db
+
+  flower:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: ctracker_celery_flower
+    command: /start-flower
+    volumes:
+      - .:/code
+    env_file:
+      - ./compose/local/django/.env
+    ports:
+      - 5555:5555
+    depends_on:
+      - redis
+      - db
+
+volumes:
+  nginx_conf:
+  nginx_ssl:
+  static:
+  media:
+  postgres_db:

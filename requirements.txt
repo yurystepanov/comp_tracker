@@ -11,7 +11,9 @@ psycopg2==2.9.5
 uwsgi==2.0.20
 pycodestyle==2.10.0
 redis==4.5.4
-
+django-celery-beat==2.5.0
+flower==1.2.0
+pyTelegramBotAPI==4.11.0
 
 
 
