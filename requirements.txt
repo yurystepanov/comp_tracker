@@ -8,15 +8,6 @@ Pillow==9.4.0
 pytils==0.4.1
 mock==5.0.1
 psycopg2==2.9.5
-uwsgi==2.0.20
+pyuwsgi=2.0.22
 pycodestyle==2.10.0
 redis==4.5.4
-
-
-
-
-
-
-
-
-
