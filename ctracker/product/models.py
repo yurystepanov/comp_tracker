@@ -8,7 +8,6 @@ from django.contrib.auth import get_user_model
 from pytils.translit import slugify
 
 
-
 class Brand(models.Model):
     """
     Model, representing brand of a product; e.g. "Intel", "AMD", "NVIDIA"
