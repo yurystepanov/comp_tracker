@@ -1,14 +1,21 @@
 services:
 
+  x-common-variables: &common-variables
+    DJANGO_SETTINGS_MODULE: ctracker.settings.prod
+    POSTGRES_DB: {{ env.POSTGRES_DB }}
+    POSTGRES_USER: {{ env.POSTGRES_USER }}
+    POSTGRES_PASSWORD: {{ env.POSTGRES_PASSWORD }}
+    POSTGRES_HOST: {{ env.POSTGRES_HOST }}
+    POSTGRES_PORT: {{ env.POSTGRES_PORT }}
+    DJANGO_SECRET_KEY: {{ env.DJANGO_SECRET_KEY }}
+    TG_BOT_API_KEY: {{ env.TG_BOT_API_KEY }}
+
   db:
     image: postgres:15.2
     restart: always
     volumes:
       - postgres_db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB={{ env.POSTGRES_DB }}
-      - POSTGRES_USER={{ env.POSTGRES_USER }}
-      - POSTGRES_PASSWORD={{ env.POSTGRES_PASSWORD }}
+    environment: *common-variables
 
   redis:
     image: redis:7-alpine
@@ -21,15 +28,7 @@ services:
       - nginx:/code/data/nginx
       - ctracker_static:/code/ctracker/static
       - ctracker_media:/code/ctracker/media
-    environment:
-      - DJANGO_SETTINGS_MODULE=ctracker.settings.prod
-      - POSTGRES_DB={{ env.POSTGRES_DB }}
-      - POSTGRES_USER={{ env.POSTGRES_USER }}
-      - POSTGRES_PASSWORD={{ env.POSTGRES_PASSWORD }}
-      - POSTGRES_HOST={{ env.POSTGRES_HOST }}
-      - POSTGRES_PORT={{ env.POSTGRES_PORT }}
-      - DJANGO_SECRET_KEY= {{ env.DJANGO_SECRET_KEY }}
-      - TG_BOT_API_KEY = {{ env.TG_BOT_API_KEY }}
+    environment: *common-variables
     depends_on:
       - db
 
@@ -47,6 +46,39 @@ services:
       - "80:80"
       - "443:443"
 
+  celery_worker:
+    image: {{ env.IMAGE_URL }}
+    command: /start-celeryworker
+    environment: *common-variables
+    depends_on:
+      - redis
+      - db
+
+  celery_beat:
+    image: {{ env.IMAGE_URL }}
+    command: /start-celerybeat
+    environment: *common-variables
+    depends_on:
+      - redis
+      - db
+
+  telegram_bot:
+    image: {{ env.IMAGE_URL }}
+    command: /start-telegrambot
+    environment: *common-variables
+    depends_on:
+      - redis
+      - db
+
+  flower:
+    image: {{ env.IMAGE_URL }}
+    command: /start-flower
+    environment: *common-variables
+    ports:
+      - 5555:5555
+    depends_on:
+      - redis
+      - db
 
 volumes:
   nginx:
