@@ -5,8 +5,8 @@ set -o pipefail
 set -o nounset
 
 # Copy NGINX config
-cp -r /config/nginx/conf /active/config/nginx/
-cp -r /config/nginx/ssl /active/config/nginx/
+# cp -r /config/nginx/conf /active/config/nginx/
+# cp -r /config/nginx/ssl /active/config/nginx/
 
 # Change current directory to ctraacker
 cd ctracker || exit
