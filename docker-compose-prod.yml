@@ -26,6 +26,8 @@ services:
       - POSTGRES_DB={{ env.POSTGRES_DB }}
       - POSTGRES_USER={{ env.POSTGRES_USER }}
       - POSTGRES_PASSWORD={{ env.POSTGRES_PASSWORD }}
+      - POSTGRES_HOST={{ env.POSTGRES_HOST }}
+      - POSTGRES_PORT={{ env.POSTGRES_PORT }}
       - DJANGO_SECRET_KEY= {{ env.DJANGO_SECRET_KEY }}
       - TG_BOT_API_KEY = {{ env.TG_BOT_API_KEY }}
     depends_on:
