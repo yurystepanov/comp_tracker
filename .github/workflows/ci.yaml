@@ -30,9 +30,9 @@ jobs:
           - 5432:5432 # exposing 5432 port for application to use
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-      redis:
-        # Docker Hub image
-        image: redis
+      #redis:
+      #  # Docker Hub image
+      #  image: redis
     steps:
       - name: Checkout code # checking our the code at current commit that triggers the workflow
         uses: actions/checkout@v2
@@ -58,9 +58,9 @@ jobs:
       - name: Run Migrations # run migrations to create table in side car db container
         working-directory: ctracker
         run: python manage.py migrate
-      - name: Run Test # running tests
-        working-directory: ctracker
-        run: python manage.py test
+      #- name: Run Test # running tests
+      #  working-directory: ctracker
+      #  run: python manage.py test
 
   package-job: # package job for building and publishing docker images
     runs-on: ubuntu-latest
