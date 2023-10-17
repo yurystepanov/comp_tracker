@@ -26,3 +26,5 @@ DATABASES = {
         'PORT': 5432,
     }
 }
+
+TELEGRAM_BOT_API_KEY = os.environ.get('TG_BOT_API_KEY')

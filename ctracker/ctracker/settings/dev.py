@@ -1,7 +1,7 @@
 from .base import *
 import os
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG')
 
 
 # Security
@@ -13,15 +13,17 @@ ADMINS = [
     ('Yury Stepanov', 'yury.a.stepanov@gmail.com'),
 ]
 
-ALLOWED_HOSTS = ['ctrackerdev.ru', 'www.ctrackerdev.ru']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'ctracker.ru']
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'db',
-        'PORT': 5432,
+        'ENGINE': os.environ.get('SQL_ENGINE'),
+        'NAME': os.environ.get('SQL_DATABASE'),
+        'USER': os.environ.get('SQL_USER'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD'),
+        "HOST": os.environ.get('SQL_HOST'),
+        "PORT": os.environ.get('SQL_PORT'),
     }
 }
+
+TELEGRAM_BOT_API_KEY = os.environ.get('TG_BOT_API_KEY')

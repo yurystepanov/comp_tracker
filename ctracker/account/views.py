@@ -20,10 +20,11 @@ def register(request):
                 # Save the User object
                 new_user.save()
                 # Save the User Profile
-                Profile.objects.create(user=new_user)
-        return render(request,
-                      'account/register_done.html',
-                      {'new_user': new_user})
+                #Removed as we have signal to create profile
+                #Profile.objects.create(user=new_user)
+                return render(request,
+                              'account/register_done.html',
+                              {'new_user': new_user})
     else:
         form = UserRegistrationForm()
 
