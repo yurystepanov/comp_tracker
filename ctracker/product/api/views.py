@@ -94,11 +94,11 @@ class SpecificationValueViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, 
         serializer = self.get_serializer(data=request.data, many=True)
         valid = serializer.is_valid(raise_exception=False)
 
-        with open(file='log.txt', mode='a') as f:
-            f.writelines('' + "\n")
-            f.write(json.dumps(request.data) + "\n")
-            f.writelines('' + "\n")
-            f.write(json.dumps(serializer.errors) + "\n")
+        # with open(file='log.txt', mode='a') as f:
+        # f.writelines('' + "\n")
+        #     f.write(json.dumps(request.data) + "\n")
+        #     f.writelines('' + "\n")
+        #     f.write(json.dumps(serializer.errors) + "\n")
 
         if not valid:
             raise ValueError
