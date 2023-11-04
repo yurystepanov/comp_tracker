@@ -1,10 +1,10 @@
+.idea
 /ctracker/uwsgi_app.sock
 /ctracker/uwsgi_app.sock 
 /ctracker/log.txt
 /ctracker/ssl/ctracker.crt
 /ctracker/ssl/ctracker.key
 /ctracker/db.json
-/ctracker/.idea
 /ctracker/db.sqlite3
 /ctracker/media
 /ctracker/data
