@@ -23,6 +23,13 @@ class UserEditForm(forms.ModelForm):
 
 
 class ProfileEditForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ProfileEditForm, self).__init__(*args, **kwargs)
+        self.fields['telegram_verification_code'].disabled = True
+
     class Meta:
         model = Profile
-        fields = ['date_of_birth', 'photo']
+        fields = ['date_of_birth',
+                  'photo',
+                  'telegram_verification_code',
+                  ]

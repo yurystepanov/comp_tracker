@@ -1,6 +1,7 @@
 {% extends 'bootstrap5.html' %}
 
 {% load bootstrap5 %}
+{% load app_tags %}
 
 {% block bootstrap5_extra_head %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -57,6 +58,8 @@
                   <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
                     <li><a class="dropdown-item" href="{% url 'account:profile' %}">Профиль</a></li>
                     <li><a class="dropdown-item" href="{% url 'password_change' %}">Изменение пароля</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% settings_value 'TELEGRAM_BOT_URL' %}" target="_blank">Telegram-бот</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
                   </ul>

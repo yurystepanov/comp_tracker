@@ -28,3 +28,4 @@ DATABASES = {
 }
 
 TELEGRAM_BOT_API_KEY = os.environ.get('TG_BOT_API_KEY')
+TELEGRAM_BOT_URL = 'https://t.me/ctracker_prod_bot'

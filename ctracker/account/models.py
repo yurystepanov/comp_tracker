@@ -26,7 +26,7 @@ class Profile(models.Model):
     allow_notifications = models.BooleanField(default=False)
     telegram_user_id = models.CharField(max_length=100, blank=True)
     telegram_verified = models.BooleanField(default=False)
-    telegram_verification_code = models.IntegerField(default=0)
+    telegram_verification_code = models.IntegerField(default=0, verbose_name='Код проверки Telegram')
 
     def __str__(self):
         return f'Profile of {self.user.username}'
