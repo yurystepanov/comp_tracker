@@ -1,3 +1,4 @@
+import decimal
 from decimal import Decimal
 from copy import deepcopy
 
@@ -104,7 +105,11 @@ class UserAssembly:
         for product in products:
             user_assembly[str(product.id)]['product'] = product
         for item in user_assembly.values():
-            item['price'] = Decimal(item['price'])
+            try:
+                item['price'] = Decimal(item['price'])
+            except decimal.InvalidOperation:
+                item['price'] = 0
+
             item['total_price'] = item['price'] * item['quantity']
             yield item
 
