@@ -131,7 +131,7 @@ class Product(models.Model):
         """
         Returns current minimum price for Product. If no price exists - returns None
         """
-        key = (self.id, 'curr_price')
+        key = '_'.join(map(str, (self.id, 'curr_price')))
         price = cache.get(key)
 
         if not price:
@@ -145,7 +145,7 @@ class Product(models.Model):
         """
         Returns closest vendors price that differs from the current price
         """
-        key = (self.id, 'prev_price')
+        key = '_'.join(map(str, (self.id, 'prev_price')))
         prev_price = cache.get(key)
 
         if not prev_price:
