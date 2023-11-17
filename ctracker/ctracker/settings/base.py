@@ -74,6 +74,9 @@ TEMPLATES = [
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
+            'libraries': {
+                'app_tags': 'templatetags.app_tags',
+            },
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -180,5 +183,4 @@ CELERY_BROKER_URL = "redis://redis:6379/0"
 CELERY_RESULT_BACKEND = "redis://redis:6379/0"
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-TELEGRAM_BOT_API_KEY = '6117329872:AAFeu286dRjJq8AeKwdCwgY1Xe9ScE3Spq4'
-TELEGRAM_BOT_URL = 'https://t.me/ctracker_dev_bot'
+TELEGRAM_BOT_API_KEY = '6117329872:AAFeu286dRjJq8AeKwdCwgY1Xe9ScE3Spq401'
