@@ -1,4 +1,5 @@
-from django.test import TestCase
+from django.conf import settings
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from datetime import date
 from django.contrib.auth import get_user_model
@@ -218,6 +219,7 @@ class ProductDetailView(TestCase):
                                                                              'slug': product.slug}))
         self.assertEqual(response.status_code, 200)
 
+    @override_settings(CACHES=getattr(settings, 'TEST_CACHES'))
     def test_view_uses_correct_template(self):
         product = Product.objects.all().first()
         response = self.client.get(reverse('product:product_detail', kwargs={'pk': product.pk,
@@ -229,6 +231,7 @@ class ProductDetailView(TestCase):
         response = self.client.get(reverse('product:product_detail_by_id', kwargs={'pk': '1234567'}))
         self.assertEqual(response.status_code, 404)
 
+    @override_settings(CACHES=getattr(settings, 'TEST_CACHES'))
     def test_view__has_product(self):
         product = Product.objects.all().first()
         response = self.client.get(reverse('product:product_detail', kwargs={'pk': product.pk,
@@ -237,6 +240,7 @@ class ProductDetailView(TestCase):
         product = response.context.get('product')
         self.assertIsNotNone(product)
 
+    @override_settings(CACHES=getattr(settings, 'TEST_CACHES'))
     def test_view_has_price(self):
         product = Product.objects.all().first()
         response = self.client.get(reverse('product:product_detail', kwargs={'pk': product.pk,
