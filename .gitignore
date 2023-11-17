@@ -1,4 +1,5 @@
 .idea
+.handler-saves
 /ctracker/uwsgi_app.sock
 /ctracker/uwsgi_app.sock 
 /ctracker/log.txt
