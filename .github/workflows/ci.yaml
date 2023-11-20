@@ -103,6 +103,8 @@ jobs:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           YC_VM_USERNAME: ${{ secrets.YC_VM_USERNAME }}
           TG_BOT_API_KEY:  ${{ secrets.TG_BOT_API_KEY }}
+          CELERY_BROKER:  ${{ secrets.CELERY_BROKER }}
+          CELERY_BACKEND:  ${{ secrets.CELERY_BACKEND }}
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           folder-id: b1gpla67gvi8287ckpmi
