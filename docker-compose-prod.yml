@@ -75,8 +75,6 @@ services:
     image: {{ env.IMAGE_URL }}
     command: /start-flower
     environment: *common-variables
-    ports:
-      - 5555:5555
     depends_on:
       - redis
       - db
