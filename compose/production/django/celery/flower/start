@@ -18,5 +18,5 @@ done
 
 celery -A ctracker  \
     --broker="${CELERY_BROKER}" \
-    --url_prefix=flower \
-    flower
+    flower \
+    --url_prefix=flower
