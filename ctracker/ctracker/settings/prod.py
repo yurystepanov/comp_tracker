@@ -16,6 +16,13 @@ ADMINS = [
 
 ALLOWED_HOSTS = ['ctracker.ystep.ru', 'www.ctracker.ystep.ru']
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://redis:6379",
+    }
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
