@@ -3,8 +3,11 @@
 set -o errexit
 set -o nounset
 
+# Change current directory to ctracker
+cd ctracker || exit
+
 worker_ready() {
-    celery -A celery inspect ping
+    celery -A ctracker inspect ping
 }
 
 until worker_ready; do
@@ -13,6 +16,6 @@ until worker_ready; do
 done
 >&2 echo 'Celery workers is available'
 
-celery -A celery  \
+celery -A ctracker  \
     --broker="${CELERY_BROKER}" \
     flower
