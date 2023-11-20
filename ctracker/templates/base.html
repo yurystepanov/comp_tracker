@@ -2,6 +2,7 @@
 
 {% load bootstrap5 %}
 {% load app_tags %}
+{% load static %}
 
 {% block bootstrap5_extra_head %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -53,7 +54,13 @@
 
                 <div class="flex-shrink-0 dropdown">
                   <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ request.user.first_name|default:request.user.username }}: <img src="https://github.com/mdo.png" alt="mdo" class="rounded-circle" width="32" height="32">
+                    {% with photo=request.user.profile.photo %}
+                    {{ request.user.first_name|default:request.user.username }}:
+                      {% if photo %}
+                      <img src="{% get_media_prefix %}{{ request.user.profile.photo }}" alt="No Image" class="rounded-circle" width="32" height="32">
+                      {% endif %}
+                    {% endwith %}
+
                   </a>
                   <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
                     <li><a class="dropdown-item" href="{% url 'account:profile' %}">Профиль</a></li>
