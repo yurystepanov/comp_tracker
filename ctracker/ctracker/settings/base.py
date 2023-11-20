@@ -190,3 +190,4 @@ CELERY_RESULT_BACKEND = "redis://redis:6379/0"
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 TELEGRAM_BOT_API_KEY = '6117329872:AAFeu286dRjJq8AeKwdCwgY1Xe9ScE3Spq401'
+TELEGRAM_BOT_URL = 'https://t.me/ctracker_dev_bot'

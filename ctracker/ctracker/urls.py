@@ -37,6 +37,7 @@ urlpatterns = [
     re_path(r'^favicon\.ico$', favicon_view),
     path('account/', include('account.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('telegram/', include('bot.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
          name='django.contrib.sitemaps.views.sitemap'),

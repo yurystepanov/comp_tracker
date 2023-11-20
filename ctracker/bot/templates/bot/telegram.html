@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load bootstrap5 %}
+{% load app_tags %}
+
+{% block title %}Telegram-рассылка{% endblock %}
+
+{% block content %}
+
+<p><a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"  href="{% settings_value 'TELEGRAM_BOT_URL' %}" target="_blank">Telegram-бот</a></p>
+
+
+{% if not user.profile.telegram_verified %}
+    <p>Для регистрации в Telegram-боте перейдите по ссылке выше и введите команду: </p>
+    <p>/register  {{ request.user.username }} {{ request.user.profile.telegram_verification_code}}</p>
+    <p>После регистрации обновите страницу для проверки успешности регистрации и отправки тестовой рассылки</p>
+{% else %}
+    <p>Вы зарегистрированы в Telegram-боте</p>
+    <form action="{% url "telegram:telegram_newsletter" %}" method="post">
+        {% csrf_token %}
+        <p><input type="submit" value="Отправить рассылку"></p>
+    </form>
+{% endif %}
+
+{% endblock %}

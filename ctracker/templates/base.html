@@ -67,6 +67,7 @@
                     <li><a class="dropdown-item" href="{% url 'password_change' %}">Изменение пароля</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{% settings_value 'TELEGRAM_BOT_URL' %}" target="_blank">Telegram-бот</a></li>
+                    <li><a class="dropdown-item" href="{% url 'telegram:telegram_newsletter' %}" target="_blank">Telegram-рассылка</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
                   </ul>
