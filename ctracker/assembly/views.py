@@ -83,7 +83,6 @@ def edit_user_assembly(request):
 
 @require_POST
 def change_product_qty(request):
-    print(request.POST)
     if request.method == "POST":
         if request.POST.get("operation") == "change_product_qty":
             product_id = request.POST.get("product", None)
