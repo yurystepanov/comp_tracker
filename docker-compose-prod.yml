@@ -23,7 +23,7 @@ services:
 
   web:
     image: {{ env.IMAGE_URL }}
-    command: /start
+    command: /start.sh
     restart: always
     volumes:
       - nginx:/code/data/nginx
@@ -49,7 +49,7 @@ services:
 
   celery_worker:
     image: {{ env.IMAGE_URL }}
-    command: /start-celeryworker
+    command: /start-celeryworker.sh
     environment: *common-variables
     depends_on:
       - redis
@@ -57,7 +57,7 @@ services:
 
   celery_beat:
     image: {{ env.IMAGE_URL }}
-    command: /start-celerybeat
+    command: /start-celerybeat.sh
     environment: *common-variables
     depends_on:
       - redis
@@ -65,7 +65,7 @@ services:
 
   telegram_bot:
     image: {{ env.IMAGE_URL }}
-    command: /start-telegrambot
+    command: /start-telegrambot.sh
     environment: *common-variables
     depends_on:
       - redis
@@ -73,7 +73,7 @@ services:
 
   flower:
     image: {{ env.IMAGE_URL }}
-    command: /start-flower
+    command: /start-flower.sh
     environment: *common-variables
     depends_on:
       - redis

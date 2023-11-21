@@ -18,20 +18,20 @@ COPY ./compose/local/django/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # COPY start scripts
-COPY ./compose/local/django/start /start
-RUN chmod +x /start
+COPY ./compose/local/django/start.sh /start.sh
+RUN chmod +x /start.sh
 
-COPY ./compose/local/django/celery/worker/start /start-celeryworker
-RUN chmod +x /start-celeryworker
+COPY ./compose/local/django/celery/worker/start.sh /start-celeryworker.sh
+RUN chmod +x /start-celeryworker.sh
 
-COPY ./compose/local/django/celery/beat/start /start-celerybeat
-RUN chmod +x /start-celerybeat
+COPY ./compose/local/django/celery/beat/start.sh /start-celerybeat.sh
+RUN chmod +x /start-celerybeat.sh
 
-COPY ./compose/local/django/celery/flower/start /start-flower
-RUN chmod +x /start-flower
+COPY ./compose/local/django/celery/flower/start.sh /start-flower.sh
+RUN chmod +x /start-flower.sh
 
-COPY ./compose/local/django/telegram_bot/start /start-telegrambot
-RUN chmod +x /start-telegrambot
+COPY ./compose/local/django/telegram_bot/start.sh /start-telegrambot.sh
+RUN chmod +x /start-telegrambot.sh
 
 #COPY config files
 COPY ./compose/local/django/uwsgi /config/uwsgi
