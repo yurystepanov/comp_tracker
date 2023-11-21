@@ -14,8 +14,8 @@ COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 
 # COPY entrypoint
-COPY ./compose/production/django/entrypoint /entrypoint
-RUN chmod +x /entrypoint
+COPY ./compose/production/django/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # COPY start scripts
 COPY ./compose/production/django/start /start
@@ -43,4 +43,4 @@ WORKDIR /code
 # Copy the Django project
 COPY . /code/
 
-ENTRYPOINT ["/entrypoint"]
+ENTRYPOINT ["/entrypoint.sh"]
