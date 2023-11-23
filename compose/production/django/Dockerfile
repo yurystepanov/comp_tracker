@@ -6,8 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Upgrade pip
-RUN pip install --upgrade pip
-RUN pip install --upgrade setuptools
+RUN pip install --upgrade pip setuptools
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements.txt /requirements.txt
