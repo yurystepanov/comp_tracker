@@ -2,13 +2,12 @@
 {% load bootstrap5 %}
 {% load static %}
 {% if 'use_i18n'|bootstrap_setting %}
-    {% load i18n %}
-    {% get_current_language as LANGUAGE_CODE %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 {% endif %}
 <html lang="{{ LANGUAGE_CODE|default:'en_us' }}" class="h-100">
 
 <head>
-
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,27 +20,25 @@
 
     <!-- Bootstrap JavaScript if it is in head -->
     {% if 'javascript_in_head'|bootstrap_setting %}
-        {% bootstrap_javascript %}
+    {% bootstrap_javascript %}
     {% endif %}
 
     {% block bootstrap5_extra_head %}{% endblock %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}" >
-
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}">
 </head>
 
 <body class=" d-flex flex-column h-100">
-{% block bootstrap5_before_content %}{% endblock %}
-{% block bootstrap5_content %} CONTENT {% endblock %}
-{% block bootstrap5_after_content %}{% endblock %}
+    {% block bootstrap5_before_content %}{% endblock %}
+    {% block bootstrap5_content %} CONTENT {% endblock %}
+    {% block bootstrap5_after_content %}{% endblock %}
 
-<!-- Bootstrap JavaScript if it is in body -->
-{% if not 'javascript_in_head'|bootstrap_setting %}
+    <!-- Bootstrap JavaScript if it is in body -->
+    {% if not 'javascript_in_head'|bootstrap_setting %}
     {% bootstrap_javascript %}
-{% endif %}
+    {% endif %}
 
-{% block bootstrap5_extra_script %}
-{% endblock %}
-
+    {% block bootstrap5_extra_script %}
+    {% endblock %}
 </body>
 
 </html>
