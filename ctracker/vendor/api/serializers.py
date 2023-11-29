@@ -38,4 +38,4 @@ class VendorLinkSerializer(serializers.ModelSerializer):
 class VendorPriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = VendorPrice
-        fields = ['id', 'vendor', 'product', 'price', 'date', 'is_current']
+        fields = ['id', 'vendor', 'product', 'price', 'date', 'is_current', 'updated_at']

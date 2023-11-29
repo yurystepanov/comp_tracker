@@ -59,6 +59,7 @@ class VendorPrice(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField()
     is_current = models.BooleanField()
+    updated_at = models.DateField(auto_now=True)
 
     objects = models.Manager()  # The default manager.
     current = CurrentManager()  # Current price manager.
