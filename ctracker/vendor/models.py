@@ -66,6 +66,9 @@ class VendorPrice(models.Model):
 
     class Meta:
         unique_together = ['vendor', 'product', 'date']
+        indexes = [
+            models.Index(fields=["vendor", "product", "is_current"]),
+        ]
         verbose_name = 'price'
         verbose_name_plural = 'prices'
         db_table = 'vendor_price'
