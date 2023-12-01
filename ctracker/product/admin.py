@@ -41,9 +41,16 @@ class BrandAdmin(admin.ModelAdmin):
 
 @admin.register(SpecificationValue)
 class SpecificationValueAdmin(admin.ModelAdmin):
-    list_display = ['product', 'specification', 'value']
+    list_display = ['product', 'specification', 'value', 'value_float']
     list_filter = ['specification']
     search_fields = ['value']
+
+    actions = ['re_save']
+
+    @admin.action(description='Resave selected records (re-floatify)')
+    def re_save(self, request, queryset):
+        for spec_value in queryset:
+            spec_value.save()
 
 
 class VendorLinkInLine(GenericTabularInline):

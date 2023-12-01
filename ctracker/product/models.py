@@ -7,6 +7,8 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from pytils.translit import slugify
 
+from common.utils import any_str_value_to_float
+
 
 class Brand(models.Model):
     """
@@ -212,8 +214,9 @@ class SpecificationValue(models.Model):
     6 cores, socket LGA 1700.
     """
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='specifications')
-    specification = models.ForeignKey(Specification, on_delete=models.CASCADE)
+    specification = models.ForeignKey(Specification, on_delete=models.CASCADE, related_name='specvalues')
     value = models.CharField(max_length=400)
+    value_float = models.FloatField(default=0)
 
     class Meta:
         verbose_name = 'specification value'
@@ -223,6 +226,10 @@ class SpecificationValue(models.Model):
 
     def __str__(self):
         return f'{self.product}: [{self.specification}] -> {self.value}'
+
+    def save(self, *args, **kwargs):
+        self.value_float = any_str_value_to_float(self.value)[0]
+        super().save(*args, **kwargs)
 
 
 class ProductFilter(models.Model):
