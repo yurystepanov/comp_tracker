@@ -95,7 +95,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id', 'url', 'name', 'brand', 'group', 'description_short', 'description', 'imageURL',
-                  'specifications']
+                  'specifications', 'price']
 
 
 class StateOperationSerializer(serializers.Serializer):
