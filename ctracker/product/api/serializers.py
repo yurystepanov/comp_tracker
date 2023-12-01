@@ -3,7 +3,6 @@ from enum import Enum, auto
 from rest_framework import serializers
 from product.models import Product, ProductGroup, Brand, SpecificationValue, Specification, SpecificationGroup
 from assembly.services import UserAssembly
-from django_filters import rest_framework as filters
 
 
 class StateOperations(Enum):
@@ -13,15 +12,22 @@ class StateOperations(Enum):
 
 
 class BrandSerializer(serializers.ModelSerializer):
+    products = serializers.HyperlinkedIdentityField(view_name='brand-product-list',
+                                                    lookup_url_kwarg='brand_pk',
+                                                    read_only=True)
     class Meta:
         model = Brand
-        fields = ['id', 'url', 'name']
+        fields = ['id', 'url', 'name', 'products']
 
 
 class ProductGroupSerializer(serializers.HyperlinkedModelSerializer):
+    products = serializers.HyperlinkedIdentityField(view_name='group-product-list',
+                                                    lookup_url_kwarg='group_pk',
+                                                    read_only=True)
+
     class Meta:
         model = ProductGroup
-        fields = ['id', 'name', 'order', 'url']
+        fields = ['id', 'name', 'order', 'url', 'products']
 
 
 class SpecificationGroupSerializer(serializers.HyperlinkedModelSerializer):
