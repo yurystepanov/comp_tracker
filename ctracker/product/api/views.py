@@ -50,7 +50,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 class ProductGroupViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ProductGroup.objects.all()
+    queryset = ProductGroup.objects.exclude(id=12)
     serializer_class = ProductGroupSerializer
 
 
