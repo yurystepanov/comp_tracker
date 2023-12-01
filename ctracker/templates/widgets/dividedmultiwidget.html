@@ -1,0 +1,5 @@
+{% spaceless %}
+<div class = "row">
+{% for widget in widget.subwidgets %}<div class="col-lg-6">{% include widget.template_name %}</div>{% endfor %}
+</div>
+{% endspaceless %}

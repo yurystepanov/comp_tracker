@@ -30,16 +30,14 @@
             <span class="fs-5 fw-semibold">Фильтры</span>
           </p>
           <form id="filterform" method="get">
-              {% bootstrap_form form %}
+              {% bootstrap_form filter_set.form exclude='search' %}
               <p><input type="submit" value="Применить"></p>
           </form>
       </div>
 
       <div class="col-9 themed-grid-col">
-
-
         <div class="input-group mb-3">
-          <input form="filterform" type="text" class="form-control" placeholder="Intel 12400F" aria-label="Поиск" aria-describedby="button-addon2" name="search" id="search" value="{{ search_value }}">
+          <input form="filterform" type="text" class="form-control" placeholder="Intel 12400F" aria-label="Поиск" aria-describedby="button-addon2" name="search" id="id_search" value="{{ search_value }}">
           <button form="filterform"  class="btn btn-outline-secondary" type="submit" id="button-addon2">Поиск</button>
         </div>
 
