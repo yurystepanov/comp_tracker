@@ -3,6 +3,7 @@ from enum import Enum, auto
 from rest_framework import serializers
 from product.models import Product, ProductGroup, Brand, SpecificationValue, Specification, SpecificationGroup
 from assembly.services import UserAssembly
+from django_filters import rest_framework as filters
 
 
 class StateOperations(Enum):

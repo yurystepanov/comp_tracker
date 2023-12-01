@@ -8,33 +8,12 @@ from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from product.models import Product, ProductGroup, Brand, SpecificationValue, SpecificationGroup
+from product.models import Product, ProductGroup, Brand, SpecificationValue, \
+    annotate_queryset_with_price
 from .serializers import (ProductSerializer, ProductGroupSerializer, BrandSerializer,
                           ProductSpecificationValueSerializer, StateOperationSerializer, StateOperations)
 
-
-class ProductFilter(filters.FilterSet):
-    search = filters.CharFilter(field_name='search', method='filter_search', label='Search')
-    pn = filters.CharFilter(field_name='pn', method='pn_search', label='Manufacturers P/N')
-
-    class Meta:
-        model = Product
-        fields = ['name', 'group']
-
-    def filter_search(self, qs, name, value):
-        for item in value.split('~~'):
-            qs = qs.filter(
-                Q(name__contains=item) |
-                Q(description_short__contains=item)
-            )
-
-        return qs
-
-    def pn_search(self, qs, name, value):
-        qs = qs.filter(specifications__value__contains=value,
-                       specifications__specification__name='Код производителя')
-
-        return qs
+from product.filters import ProductFilterSet
 
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -42,15 +21,21 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = queryset.select_related('brand', 'group')
 
     serializer_class = ProductSerializer
-    filterset_class = ProductFilter
+
+    filterset_class = ProductFilterSet
+    group_id = None
 
     def get_queryset(self):
         group_id = self.kwargs.get("group_pk")
+
+        self.queryset = annotate_queryset_with_price(self.queryset, '')
+
         if group_id:
             try:
                 product_group = ProductGroup.objects.get(id=group_id)
             except ProductGroup.DoesNotExist:
                 raise NotFound('A group with this id does not exist')
+            self.group_id = product_group.id
             return self.queryset.filter(group=product_group)
 
         brand_id = self.kwargs.get("brand_pk")
