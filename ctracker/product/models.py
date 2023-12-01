@@ -226,6 +226,10 @@ class SpecificationValue(models.Model):
 
 
 class ProductFilter(models.Model):
+    class FilterDisplayChoices(models.TextChoices):
+        MultipleChoiceField = 'CHOICE', 'MultipleChoice'
+        RangeField = 'RANGE', 'Range'
+
     """
     Model, representing specifications selected for filtering of products in a product group
     Available filters on product_list page
@@ -234,6 +238,9 @@ class ProductFilter(models.Model):
     specification = models.ForeignKey(Specification, on_delete=models.CASCADE, related_name='filtering')
     order = models.IntegerField(default=0, blank=True)
     filter_name = models.CharField(max_length=20)
+    display_widget = models.CharField(max_length=10,
+                                      choices=FilterDisplayChoices.choices,
+                                      default=FilterDisplayChoices.MultipleChoiceField)
 
     class Meta:
         unique_together = ['group', 'specification']

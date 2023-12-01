@@ -68,7 +68,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductFilter)
 class ProductFilterAdmin(admin.ModelAdmin):
-    list_display = ['group', 'specification', 'order', 'filter_name']
+    list_display = ['group', 'specification', 'order', 'filter_name', 'display_widget']
     list_filter = ['group']
     search_fields = ['specification']
     ordering = ['group', 'order']
