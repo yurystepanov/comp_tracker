@@ -108,4 +108,5 @@ class ProductFilterFormTests(TestCase):
     #         form = ProductFilterForm(group=self.group, data={'vlt': ['220v', '2400v']})
     #         filters.assert_called_once()
     #         self.assertEqual(form.is_valid(), False)
-    #         self.assertEqual(form.errors['vlt'], ['Выберите корректный вариант. 2400v нет среди допустимых значений.'])
+    #         self.assertEqual(form.errors['vlt'], ['Выберите корректный вариант.
+    #         2400v нет среди допустимых значений.'])

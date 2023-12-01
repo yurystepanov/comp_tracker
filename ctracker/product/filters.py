@@ -111,7 +111,7 @@ class ProductFilterSet(django_filters.FilterSet):
             try:
                 # For DRF API Filtering in nested routes parameters form url are in parser_context
                 product_group_id = request.parser_context['kwargs']['group_pk']
-            except:
+            except Exception:
                 pass
 
         if product_group_id:

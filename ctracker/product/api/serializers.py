@@ -15,6 +15,7 @@ class BrandSerializer(serializers.ModelSerializer):
     products = serializers.HyperlinkedIdentityField(view_name='brand-product-list',
                                                     lookup_url_kwarg='brand_pk',
                                                     read_only=True)
+
     class Meta:
         model = Brand
         fields = ['id', 'url', 'name', 'products']
