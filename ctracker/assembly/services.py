@@ -56,8 +56,11 @@ class UserAssembly:
         """
         product_id = str(product.id)
         if product_id not in self.user_assembly:
+            price = product.price()
+            if price is None:
+                price = 0
             self.user_assembly[product_id] = {'quantity': 0,
-                                              'price': str(product.price())}
+                                              'price': str(price)}
         if override_quantity:
             self.user_assembly[product_id]['quantity'] = quantity
         else:
