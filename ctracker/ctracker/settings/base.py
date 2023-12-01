@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'django.contrib.humanize',
+    'django.forms',
     # project
     'product.apps.ProductConfig',
     'vendor.apps.VendorConfig',
@@ -86,6 +87,8 @@ TEMPLATES = [
         },
     },
 ]
+
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 WSGI_APPLICATION = 'ctracker.wsgi.application'
 
