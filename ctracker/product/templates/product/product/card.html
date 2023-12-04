@@ -1,0 +1,54 @@
+{% load humanize %}
+
+<div class="col">
+    <div class="card h-100 shadow">
+        <div class="card-header">
+        </div>
+        <div class="card-body">
+            <div class="row mb-3 text-start">
+                <div class="col-3">
+                    <img src="{{ product.imageURL}}" class="card-img-top" alt="{{ product.name }}" style="height:150px; object-fit: contain;">
+                </div>
+                <div class="card-body col-7">
+                    <div class="position-relative">
+                        <a href="{{ product.get_absolute_url}}" class="stretched-link"></a>
+                        <h6 class="card-title">{{ product.name }}</h6>
+                        <p class="card-text">{{ product.description_short }}</p>
+                    </div>
+                    <p></p>
+                    <div class="form-row">
+                        <div class="form-check form-switch form-check-inline" title="Добавить в текущую сборку">
+                          <input class="form-check-input state_switch" type="checkbox" data-id="{{ product.id }}" data-operation="assembly_submit" id="sw1-{{ product.id }}" {% if product.id in in_assembly_list %} checked {% endif %}>
+                          <label class="form-check-label" for="sw1-{{ product.id }}">В сборку</label>
+                        </div>
+                        <div class="form-check form-switch form-check-inline" title="Добавить в избранное">
+                          <input class="form-check-input state_switch" type="checkbox" data-id="{{ product.id }}" data-operation="favourites_submit" id="sw2-{{ product.id }}" {% if not user.is_authenticated %} disabled {% endif %} {% if product.id in in_favourites_list %} checked {% endif %}>
+                          <label class="form-check-label" for="sw2-{{ product.id }}">Избранное</label>
+                        </div>
+                        <div class="form-check form-switch form-check-inline" title="Добавить в рассылку цен">
+                          <input class="form-check-input state_switch" type="checkbox" data-id="{{ product.id }}" data-operation="subscription_submit" id="sw3-{{ product.id }}" {% if not user.is_authenticated %} disabled {% endif %} {% if product.id in in_subscriptions_list %} checked {% endif %}>
+                          <label class="form-check-label" for="sw3-{{ product.id }}" >Рассылка</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body col-2 text-end">
+                    {% if product.prev_price %}
+                        <s>{{ product.prev_price|floatformat:"2g" }} ₽</s>
+
+                        {% if product.price < product.prev_price %}
+                            <i class="bi bi-arrow-down-circle-fill text-success"></i>
+                        {% else %}
+                            <i class="bi bi-arrow-up-circle-fill text-danger"></i>
+                        {% endif %}
+
+                    {% endif %}
+                    <h6>от {{ product.price|floatformat:"2g" }} ₽</h6>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">Обновлено {{ product.updated_at|naturaltime }}</small>
+        </div>
+    </div>
+</div>
+
