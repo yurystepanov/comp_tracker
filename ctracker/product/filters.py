@@ -73,6 +73,9 @@ class SpecRangeFilter(ExtraPredicateFilterMixin, django_filters.RangeFilter):
 
 
 class ProductFilterSet(django_filters.FilterSet):
+    order = django_filters.OrderingFilter(fields=(('price', 'price'),
+                                                  ('name', 'name')),
+                                          )
     search = django_filters.CharFilter(field_name='name', label='Поиск', lookup_expr='icontains')
     brand = django_filters.CharFilter(field_name='brand__name', label='Бренд', lookup_expr='icontains')
 
