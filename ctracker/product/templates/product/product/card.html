@@ -10,11 +10,12 @@
                     <img src="{{ product.imageURL}}" class="card-img-top" alt="{{ product.name }}" style="height:150px; object-fit: contain;">
                 </div>
                 <div class="card-body col-7">
+                    <a class="text-decoration-none text-reset" href="{{ product.get_absolute_url}}" >
                     <div class="position-relative">
-                        <a href="{{ product.get_absolute_url}}" class="stretched-link"></a>
                         <h6 class="card-title">{{ product.name }}</h6>
                         <p class="card-text">{{ product.description_short }}</p>
                     </div>
+                    </a>
                     <p></p>
                     <div class="form-row">
                         <div class="form-check form-switch form-check-inline" title="Добавить в текущую сборку">
