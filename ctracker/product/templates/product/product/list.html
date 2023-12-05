@@ -5,6 +5,10 @@
 
 {% block title %}{% if group.name %}{{ group.name }}{% else %}Все категории{% endif %}{% endblock %}
 
+{% block bootstrap5_extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css"/>
+{% endblock %}
+
 {% block content %}
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
@@ -27,11 +31,6 @@
       </div>
 
       <div class="col-9 themed-grid-col">
-        <div class="input-group mb-3">
-          <input form="filterform" type="text" class="form-control" placeholder="Intel 12400F" aria-label="Поиск" aria-describedby="button-addon2" name="search" id="id_search" value="{{ search_value }}">
-          <button form="filterform"  class="btn btn-outline-secondary" type="submit" id="button-addon2">Поиск</button>
-        </div>
-
         <div class="row">
             <div class="col-8">
                 {% include "pagination.html" with page=page_obj page_range=page_range %}
@@ -50,6 +49,11 @@
                   Текущая сборка
                   </button>
                 </div>
+            </div>
+            <div class="input-group mb-2 autocomplete col-12" id="autocomplete_search">
+              <input form="filterform" type="text" class="form-control autocomplete-input" placeholder="Intel 12400F" aria-label="Поиск" aria-describedby="button-addon2" name="search" id="id_search" value="{{ search_value }}">
+              <ul class="autocomplete-result-list text-start "></ul>
+    <!--          <button form="filterform"  class="btn btn-outline-secondary" type="submit" id="button-addon2">Поиск</button>-->
             </div>
         </div>
 
@@ -119,6 +123,26 @@
     function nodeScriptIs(node) {
             return node.tagName === 'SCRIPT';
     }
+</script>
+
+<script src="https://unpkg.com/@trevoreyre/autocomplete-js"></script>
+<script>
+    new Autocomplete('#autocomplete_search', {
+            search : input =>{
+                const url = `{% url 'product:search_name' %}?name=${input}{% if group.name %}&group={{ group.id }}{% endif %}`
+                return new Promise(resolve =>{
+                    fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        resolve(data.data)
+                    })
+                })
+            },
+            onSubmit: result => {
+                filterform = document.getElementById('filterform');
+                filterform.submit();
+            }
+    })
 </script>
 
 {% endblock %}

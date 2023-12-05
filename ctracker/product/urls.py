@@ -16,4 +16,6 @@ urlpatterns = [
     # product detail
     path('<int:pk>/', cache_page(60 * 60)(views.ProductDetailView.as_view()), name="product_detail_by_id"),
     path('<int:pk>/<slug:slug>/', cache_page(60 * 60)(views.ProductDetailView.as_view()), name='product_detail'),
+    # search
+    path('search/', views.search_product, name='search_name'),
 ]

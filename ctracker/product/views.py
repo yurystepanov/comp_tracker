@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 
@@ -29,12 +30,6 @@ class ProductListView(ListView):
         self.filter_set = None
 
     def get_queryset(self):
-        # TODO: Закинуть поле search в форму и отображать в template через группы (field group или fieldset).
-        #   Добавить Search2 к полю search
-        # TODO: Разбить список продуктов на отдельные файды (форма фильтра. карточку продукта).
-        #   Карточку можно будет переиспользовать. Стр 82
-        # TODO: |linebreaks forloop.counter |pluralize
-        # TODO: django - autocomplete - light, django-ajax-selects
         try:
             self.group = get_object_or_404(ProductGroup, id=self.kwargs['id'])
         except KeyError:
@@ -109,3 +104,19 @@ class ProductDetailView(DetailView):
         context['assembly'] = UserAssembly(self.request)
 
         return context
+
+
+def search_product(request):
+    name = request.GET.get("name")
+    group_id = request.GET.get("group")
+    payload = []
+
+    if name:
+        products = Product.objects.filter(name__icontains=name).values_list("name", flat=True).order_by('name')
+        if group_id:
+            products = products.filter(group_id=group_id)
+
+        products = products[: 10]
+        payload = list(products)
+
+    return JsonResponse({'status': 200, 'data': payload})
