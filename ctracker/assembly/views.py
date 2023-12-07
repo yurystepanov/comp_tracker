@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
@@ -60,12 +60,12 @@ class AssemblyDetailView(DetailView):
 
 
 def user_assembly(request):
-    user_assembly = UserAssembly(request)
+    assembly = UserAssembly(request)
 
     return render(request,
                   'assembly/assembly/user_assembly.html',
-                  {'assembly_name': user_assembly.name,
-                   'assembly': user_assembly,
+                  {'assembly_name': assembly.name,
+                   'assembly': assembly,
                    })
 
 
@@ -90,11 +90,11 @@ def change_product_qty(request):
 
             product = get_object_or_404(Product, id=product_id)
 
-            user_assembly = UserAssembly(request)
+            assembly = UserAssembly(request)
             if quantity:
-                user_assembly.add(product, quantity=quantity, override_quantity=True)
+                assembly.add(product, quantity=quantity, override_quantity=True)
             else:
-                user_assembly.remove(product)
+                assembly.remove(product)
 
             return JsonResponse({"quantity": quantity})
 
@@ -105,9 +105,9 @@ def current_assembly(request):
     if request.method == 'POST':
         assembly_id = request.POST.get('id', None)
 
-        assembly = get_object_or_404(Assembly, id=assembly_id, owner=request.user)
+        get_object_or_404(Assembly, id=assembly_id, owner=request.user)
 
-        user_assembly = UserAssembly(request)
-        user_assembly.make_current(assembly)
+        assembly = UserAssembly(request)
+        assembly.make_current(assembly)
 
         return JsonResponse(data={})
