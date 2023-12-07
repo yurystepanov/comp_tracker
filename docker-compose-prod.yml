@@ -32,6 +32,8 @@ services:
     environment: *common-variables
     depends_on:
       - db
+      - web
+      - flower
 
   nginx:
     image: nginx:1.23.4
