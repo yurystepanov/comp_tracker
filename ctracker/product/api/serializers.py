@@ -3,6 +3,7 @@ from enum import Enum, auto
 from rest_framework import serializers
 from product.models import Product, ProductGroup, Brand, SpecificationValue, Specification, SpecificationGroup
 from assembly.services import UserAssembly
+from vendor.api.serializers import VendorLinkSerializerTiny
 
 
 class StateOperations(Enum):
@@ -92,11 +93,12 @@ class ProductSerializer(serializers.ModelSerializer):
     specifications = serializers.HyperlinkedIdentityField(view_name='product-specification-list',
                                                           lookup_url_kwarg='product_pk',
                                                           read_only=True)
+    links = VendorLinkSerializerTiny(many=True, read_only=True, required=False)
 
     class Meta:
         model = Product
         fields = ['id', 'url', 'name', 'brand', 'group', 'description_short', 'description', 'imageURL',
-                  'specifications', 'price']
+                  'specifications', 'price', 'links']
 
 
 class StateOperationSerializer(serializers.Serializer):

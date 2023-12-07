@@ -18,6 +18,12 @@ class VendorSerializer(serializers.ModelSerializer):
         fields = ['id', 'url', 'name', 'description', 'website']
 
 
+class VendorLinkSerializerTiny(serializers.ModelSerializer):
+    class Meta:
+        model = VendorLink
+        fields = ['id', 'vendor', 'external_id']
+
+
 class VendorLinkSerializer(serializers.ModelSerializer):
     target_ct = ContentTypeField()
     target_url = serializers.HyperlinkedRelatedField(view_name='product-detail',

@@ -9,6 +9,8 @@ from pytils.translit import slugify
 
 from common.utils import any_str_value_to_float
 
+from django.contrib.contenttypes.fields import GenericRelation
+
 
 class Brand(models.Model):
     """
@@ -93,6 +95,8 @@ class Product(models.Model):
                                            blank=True,
                                            db_table='product_subscriptions'
                                            )
+
+    links = GenericRelation('vendor.VendorLink', content_type_field='target_ct', object_id_field='target_id')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -260,7 +264,7 @@ class ProductFilter(models.Model):
         return f'{self.group}: {self.specification}'
 
 
-def annotate_queryset_with_price(product_queryset, product_path=''):
+def annotate_queryset_with_price(product_queryset, product_path='', show_unavaliable=False):
     """
     Adds minimum price annotation as price to QuerySet containing Product
 
@@ -273,9 +277,11 @@ def annotate_queryset_with_price(product_queryset, product_path=''):
     if product_path:
         product_path += '__'
 
-    product_queryset = product_queryset.filter(**{f'{product_path}prices__is_current': True,
-                                                  f'{product_path}prices__price__gt': 0
-                                                  }). \
+    filters = {f'{product_path}prices__is_current': True}
+    if not show_unavaliable:
+        filters[f'{product_path}prices__price__gt'] = 0
+
+    product_queryset = product_queryset.filter(**filters). \
         annotate(price=models.Min(f'{product_path}prices__price'))
 
     return product_queryset

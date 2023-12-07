@@ -1,7 +1,3 @@
-import json
-
-from django.db.models import Q
-from django_filters import rest_framework as filters
 from rest_framework import viewsets, mixins, status
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import BasePermission
@@ -28,7 +24,10 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         group_id = self.kwargs.get("group_pk")
 
-        self.queryset = annotate_queryset_with_price(self.queryset, '')
+        self.queryset = annotate_queryset_with_price(self.queryset, show_unavaliable=True)
+
+        self.queryset = self.queryset.select_related('brand', 'group')
+        self.queryset = self.queryset.prefetch_related('links')
 
         if group_id:
             try:
