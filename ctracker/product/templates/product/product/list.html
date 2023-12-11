@@ -5,10 +5,6 @@
 
 {% block title %}{% if group.name %}{{ group.name }}{% else %}Все категории{% endif %}{% endblock %}
 
-{% block bootstrap5_extra_head %}
-<link rel="stylesheet" href="https://unpkg.com/@trevoreyre/autocomplete-js/dist/style.css"/>
-{% endblock %}
-
 {% block content %}
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
